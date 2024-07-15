@@ -83,9 +83,9 @@ for year in range(simulation_years):
         })
     yearly_data.append({
         'Ano': f'Ano {year + 1}',
-        'Acumulado Lucro (R$)': yearly_accumulated_profit,
-        'Acumulado Pró-labore (R$)': yearly_accumulated_pro_labore,
-        'Acumulado Total (R$)': yearly_accumulated_profit + yearly_accumulated_pro_labore
+        'Acumulado Lucro (R$)': accumulated_profit,
+        'Acumulado Pró-labore (R$)': accumulated_pro_labore,
+        'Acumulado Total (R$)': accumulated_profit + accumulated_pro_labore
     })
 
 monthly_df = pd.DataFrame(monthly_data)
@@ -93,11 +93,18 @@ yearly_df = pd.DataFrame(yearly_data)
 
 # Filtrar dados para exibição
 monthly_df_first_year = monthly_df[monthly_df['Ano'] == 'Ano 1'].copy()
-yearly_df_filtered = yearly_df[yearly_df['Ano'] != f'Ano {simulation_years}']
+yearly_df_filtered = yearly_df.copy()
+
+# Função para destacar a linha do ponto de equilíbrio
+def highlight_break_even(row):
+    if break_even_month_year is not None and row['Ano'] == f'Ano {break_even_month_year[0]}' and row['Mês'] == f'Mês {break_even_month_year[1]}':
+        return ['background-color: yellow']*len(row)
+    else:
+        return ['']*len(row)
 
 # Exibir tabelas
 st.subheader('Detalhamento Mensal (12 meses)')
-st.dataframe(monthly_df_first_year.style.format({
+st.dataframe(monthly_df.style.apply(highlight_break_even, axis=1).format({
     'Acumulado Lucro (R$)': "{:,.2f} reais",
     'Acumulado Pró-labore (R$)': "{:,.2f} reais",
     'Acumulado Total (R$)': "{:,.2f} reais"
