@@ -17,15 +17,11 @@ with st.sidebar:
     else:
         pro_labore = 0
 
-
     monthly_profit = st.slider('Lucro Mensal (R$):', min_value=0, max_value=1000000, step=50000, value=400000, format="%d")
     st.write(f'Lucro Mensal (R$): {monthly_profit:,.2f} reais')
     st.sidebar.markdown('---')
     ownership_percentage = st.slider('Percentual de Participação:', min_value=0, max_value=100, step=5, value=5, format="%d%%")
     simulation_years = st.slider('Anos de Simulação:', min_value=1, max_value=10, step=1, value=5, format="%d")
-
-    # Atualizar texto dos sliders
-
 
 # Cálculos
 profit_withdrawal = monthly_profit * (ownership_percentage / 100)
@@ -95,16 +91,20 @@ for year in range(simulation_years):
 monthly_df = pd.DataFrame(monthly_data)
 yearly_df = pd.DataFrame(yearly_data)
 
+# Filtrar dados para exibição
+monthly_df_first_year = monthly_df[monthly_df['Ano'] == 'Ano 1'].copy()
+yearly_df_filtered = yearly_df[yearly_df['Ano'] != f'Ano {simulation_years}']
+
 # Exibir tabelas
 st.subheader('Detalhamento Mensal (12 meses)')
-st.dataframe(monthly_df.style.format({
+st.dataframe(monthly_df_first_year.style.format({
     'Acumulado Lucro (R$)': "{:,.2f} reais",
     'Acumulado Pró-labore (R$)': "{:,.2f} reais",
     'Acumulado Total (R$)': "{:,.2f} reais"
 }))
 
 st.subheader('Detalhamento Anual')
-st.dataframe(yearly_df.style.format({
+st.dataframe(yearly_df_filtered.style.format({
     'Acumulado Lucro (R$)': "{:,.2f} reais",
     'Acumulado Pró-labore (R$)': "{:,.2f} reais",
     'Acumulado Total (R$)': "{:,.2f} reais"
@@ -113,11 +113,11 @@ st.dataframe(yearly_df.style.format({
 # Gráficos interativos
 st.subheader('Acúmulo Mensal (12 meses)')
 fig_monthly = go.Figure()
-fig_monthly.add_trace(go.Scatter(x=monthly_df['Mês'], y=monthly_df['Acumulado Lucro (R$)'],
+fig_monthly.add_trace(go.Scatter(x=monthly_df_first_year['Mês'], y=monthly_df_first_year['Acumulado Lucro (R$)'],
                                  mode='lines+markers', name='Acumulado Lucro (R$)'))
-fig_monthly.add_trace(go.Scatter(x=monthly_df['Mês'], y=monthly_df['Acumulado Pró-labore (R$)'],
+fig_monthly.add_trace(go.Scatter(x=monthly_df_first_year['Mês'], y=monthly_df_first_year['Acumulado Pró-labore (R$)'],
                                  mode='lines+markers', name='Acumulado Pró-labore (R$)'))
-fig_monthly.add_trace(go.Scatter(x=monthly_df['Mês'], y=monthly_df['Acumulado Total (R$)'],
+fig_monthly.add_trace(go.Scatter(x=monthly_df_first_year['Mês'], y=monthly_df_first_year['Acumulado Total (R$)'],
                                  mode='lines+markers', name='Acumulado Total (R$)'))
 fig_monthly.update_layout(title='Acúmulo Mensal (12 meses)',
                           xaxis_title='Mês',
@@ -126,11 +126,11 @@ st.plotly_chart(fig_monthly)
 
 st.subheader('Acúmulo Anual')
 fig_yearly = go.Figure()
-fig_yearly.add_trace(go.Scatter(x=yearly_df['Ano'], y=yearly_df['Acumulado Lucro (R$)'],
+fig_yearly.add_trace(go.Scatter(x=yearly_df_filtered['Ano'], y=yearly_df_filtered['Acumulado Lucro (R$)'],
                                 mode='lines+markers', name='Acumulado Lucro (R$)'))
-fig_yearly.add_trace(go.Scatter(x=yearly_df['Ano'], y=yearly_df['Acumulado Pró-labore (R$)'],
+fig_yearly.add_trace(go.Scatter(x=yearly_df_filtered['Ano'], y=yearly_df_filtered['Acumulado Pró-labore (R$)'],
                                 mode='lines+markers', name='Acumulado Pró-labore (R$)'))
-fig_yearly.add_trace(go.Scatter(x=yearly_df['Ano'], y=yearly_df['Acumulado Total (R$)'],
+fig_yearly.add_trace(go.Scatter(x=yearly_df_filtered['Ano'], y=yearly_df_filtered['Acumulado Total (R$)'],
                                 mode='lines+markers', name='Acumulado Total (R$)'))
 fig_yearly.update_layout(title='Acúmulo Anual',
                          xaxis_title='Ano',
