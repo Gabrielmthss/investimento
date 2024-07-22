@@ -44,7 +44,7 @@ for year in range(simulation_years):
         accumulated_pro_labore += pro_labore if include_pro_labore else 0
         accumulated_total = accumulated_profit + accumulated_pro_labore
         if accumulated_total >= invested_amount and break_even_month_year is None:
-            break_even_month_year = (year + 1, month + 1)
+            break_even_month_year = (year, month + 1)
             break
     if break_even_month_year is not None:
         break
@@ -75,14 +75,14 @@ for year in range(simulation_years):
         yearly_accumulated_profit += profit_withdrawal
         yearly_accumulated_pro_labore += pro_labore if include_pro_labore else 0
         monthly_data.append({
-            'Ano': f'Ano {year + 1}',
+            'Ano': f'Ano {year}',
             'Mês': f'Mês {month + 1}',
             'Acumulado Lucro (R$)': accumulated_profit,
             'Acumulado Pró-labore (R$)': accumulated_pro_labore,
             'Acumulado Total (R$)': accumulated_profit + accumulated_pro_labore
         })
     yearly_data.append({
-        'Ano': f'Ano {year + 1}',
+        'Ano': f'Ano {year}',
         'Acumulado Lucro (R$)': accumulated_profit,
         'Acumulado Pró-labore (R$)': accumulated_pro_labore,
         'Acumulado Total (R$)': accumulated_profit + accumulated_pro_labore
@@ -92,7 +92,7 @@ monthly_df = pd.DataFrame(monthly_data)
 yearly_df = pd.DataFrame(yearly_data)
 
 # Filtrar dados para exibição
-monthly_df_first_year = monthly_df[monthly_df['Ano'] == 'Ano 1'].copy()
+monthly_df_first_year = monthly_df[monthly_df['Ano'] == 'Ano 0'].copy()
 yearly_df_filtered = yearly_df.copy()
 
 # Função para destacar a linha do ponto de equilíbrio
