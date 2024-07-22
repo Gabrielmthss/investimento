@@ -21,6 +21,7 @@ with st.sidebar:
     st.write(f'Lucro Mensal (R$): {monthly_profit:,.2f} reais')
     st.sidebar.markdown('---')
     ownership_percentage = st.slider('Percentual de Participação:', min_value=0, max_value=100, step=5, value=5, format="%d%%")
+    st.write(f'Percentual de Participação: {ownership_percentage:}%')
     simulation_years = st.slider('Anos de Simulação:', min_value=1, max_value=10, step=1, value=10, format="%d")
 
 # Cálculos
